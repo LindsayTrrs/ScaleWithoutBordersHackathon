@@ -1,0 +1,167 @@
+/* Stylesheet for the Jobagotchi Chrome Extension UI injected on LinkedIn */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+.jobagotchi-badge {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  z-index: 2147483647; /* Ensure it floats above all LinkedIn layered modals */
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  padding: 18px !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(79, 70, 229, 0.05) !important;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  width: 320px !important;
+  box-sizing: border-box !important;
+  color: #1f2937 !important;
+  animation: jobagotchi-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Minimize floating badge icon styling */
+.jobagotchi-mini-badge {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  z-index: 2147483647;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  padding: 10px !important;
+  border-radius: 50% !important;
+  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2) !important;
+  border: 2px solid #4f46e5 !important;
+  width: 60px !important;
+  height: 60px !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s !important;
+  animation: jobagotchi-pop-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.jobagotchi-mini-badge:hover {
+  transform: scale(1.12) translateY(-4px) !important;
+  box-shadow: 0 15px 35px rgba(79, 70, 229, 0.3) !important;
+}
+
+/* Injected bubble styling with little pointer */
+.jobagotchi-bubble::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 15px !important;
+  left: -8px !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-top: 8px solid transparent !important;
+  border-right: 9px solid #e5e7eb !important;
+  border-bottom: 8px solid transparent !important;
+}
+
+.jobagotchi-bubble::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 15px !important;
+  left: -7px !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-top: 8px solid transparent !important;
+  border-right: 9px solid white !important;
+  border-bottom: 8px solid transparent !important;
+}
+
+/* Character sprite animations */
+.jobagotchi-pet {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  transform-origin: bottom center !important;
+}
+
+/* Sweeping active wiggle animation */
+.jobagotchi-sweeping {
+  animation: jobagotchi-wiggle-sweep 1.6s infinite ease-in-out !important;
+}
+
+/* Eating cute bounce/stretch animation */
+.jobagotchi-eating {
+  animation: jobagotchi-bounce-eat 0.5s infinite ease-in-out !important;
+}
+
+/* Custom interactive button animations */
+.jobagotchi-btn:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.05) !important;
+}
+
+.jobagotchi-btn:active {
+  transform: translateY(0px) !important;
+}
+
+/* Styled scrollbar for Highlights list */
+.jobagotchi-highlights::-webkit-scrollbar {
+  width: 4px !important;
+}
+
+.jobagotchi-highlights::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.02) !important;
+  border-radius: 2px !important;
+}
+
+.jobagotchi-highlights::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.12) !important;
+  border-radius: 2px !important;
+}
+
+.jobagotchi-highlights::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.2) !important;
+}
+
+/* Keyframes */
+@keyframes jobagotchi-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes jobagotchi-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.3) rotate(-20deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes jobagotchi-wiggle-sweep {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-10deg) scaleX(0.95) translateX(-2px);
+  }
+  75% {
+    transform: rotate(10deg) scaleX(0.95) translateX(2px);
+  }
+}
+
+@keyframes jobagotchi-bounce-eat {
+  0%, 100% {
+    transform: scaleY(1) scaleX(1);
+  }
+  50% {
+    transform: scaleY(0.75) scaleX(1.15) translateY(4px);
+  }
+}

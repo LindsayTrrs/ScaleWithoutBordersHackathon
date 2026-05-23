@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jobagotchi Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --bg: #f8fafc;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --card-bg: #ffffff;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      width: 420px;
+      height: 560px;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    /* Premium Header */
+    header {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      padding: 16px 20px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(79, 70, 229, 0.15);
+      z-index: 10;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pet-badge-level {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    /* Scrollable Container */
+    main {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-sizing: border-box;
+    }
+
+    /* Glassmorphic Pet Panel */
+    .pet-panel {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .pet-avatar-box {
+      width: 84px;
+      height: 84px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary-light) 0%, #c7d2fe 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(79, 70, 229, 0.1);
+    }
+
+    .pet-avatar-box img {
+      width: 78px;
+      height: 78px;
+      object-fit: contain;
+      transform-origin: bottom center;
+    }
+
+    .pet-avatar-box.pet-petted img {
+      animation: pet-wiggle 0.5s ease-in-out;
+    }
+
+    .pet-stats {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .pet-name-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+
+    .pet-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pet-name:hover::after {
+      content: "✏️";
+      font-size: 10px;
+    }
+
+    .pet-status-bar-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .pet-status-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .pet-bar-outer {
+      background: #e2e8f0;
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .pet-bar-inner {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .pet-action-btn {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: none;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+      align-self: flex-start;
+      margin-top: 2px;
+    }
+
+    .pet-action-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    /* Rename Dialog modal-like inside panel */
+    .rename-container {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .rename-input {
+      font-family: 'Outfit', sans-serif;
+      padding: 4px 8px;
+      font-size: 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      outline: none;
+      width: 100px;
+      font-weight: 600;
+    }
+
+    .rename-confirm {
+      background: var(--success);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    /* 2x2 Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 12px 10px;
+      text-align: center;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.03);
+      border: 1px solid rgba(0, 0, 0, 0.02);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .stat-val {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .stat-lbl {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    /* Jobs log header */
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin: 4px 0 2px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-title-badge {
+      background: #e2e8f0;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: bold;
+      padding: 1px 6px;
+      border-radius: 8px;
+    }
+
+    /* Scrollable Jobs Log list */
+    .jobs-log-list {
+      flex-grow: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 4px;
+    }
+
+    /* Custom Webkit scrollbar for Main & Lists */
+    main::-webkit-scrollbar, .jobs-log-list::-webkit-scrollbar {
+      width: 4px;
+    }
+    main::-webkit-scrollbar-track, .jobs-log-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    main::-webkit-scrollbar-thumb, .jobs-log-list::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .job-item {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.02);
+      border: 1px solid rgba(0, 0, 0, 0.02);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.2s;
+    }
+
+    .job-item:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.04);
+    }
+
+    .job-info {
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .job-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 2px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .job-company {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .job-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .score-badge {
+      font-size: 9px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .score-badge.legit {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .score-badge.suspicious {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .score-badge.neutral {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .job-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .job-btn {
+      font-family: 'Outfit', sans-serif;
+      border: none;
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .job-btn-apply {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .job-btn-apply:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .job-btn-interview {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .job-btn-interview:hover {
+      background: var(--warning);
+      color: white;
+    }
+
+    .status-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: #e2e8f0;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .status-tag.applied {
+      background: #e0e7ff;
+      color: #4f46e5;
+    }
+
+    .status-tag.interviewing {
+      background: #d1fae5;
+      color: #10b981;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .empty-state-icon {
+      font-size: 40px;
+      margin-bottom: 4px;
+      animation: broom-sweep 2s infinite ease-in-out;
+    }
+
+    /* Helper Animations */
+    @keyframes pet-wiggle {
+      0%, 100% { transform: scale(1) rotate(0); }
+      25% { transform: scale(1.15) rotate(-6deg); }
+      75% { transform: scale(1.15) rotate(6deg); }
+    }
+
+    @keyframes broom-sweep {
+      0%, 100% { transform: rotate(0deg) translateX(0); }
+      50% { transform: rotate(-15deg) translateX(-10px); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Premium Header -->
+  <header>
+    <h1>🧹 Jobagotchi</h1>
+    <div id="pet-level-badge" class="pet-badge-level">LV.1 Intern</div>
+  </header>
+
+  <main>
+    <!-- Virtual Pet Panel -->
+    <section class="pet-panel">
+      <div id="pet-avatar-container" class="pet-avatar-box">
+        <img id="pet-avatar-img" src="icons/jobagotchi_sweeping.png" alt="Jobagotchi Avatar">
+      </div>
+      <div class="pet-stats">
+        <div class="pet-name-row">
+          <span id="pet-name-display" class="pet-name">Sweepy-chan</span>
+          <div id="rename-form" class="rename-container">
+            <input type="text" id="rename-input" class="rename-input" maxlength="15">
+            <button id="rename-confirm-btn" class="rename-confirm">OK</button>
+          </div>
+        </div>
+        
+        <!-- XP Progress -->
+        <div class="pet-status-bar-container">
+          <div class="pet-status-label">
+            <span>XP Progress</span>
+            <span id="pet-xp-text">0 / 100</span>
+          </div>
+          <div class="pet-bar-outer">
+            <div id="pet-xp-bar" class="pet-bar-inner" style="background: var(--primary); width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Energy Progress -->
+        <div class="pet-status-bar-container">
+          <div class="pet-status-label">
+            <span>🔋 Energy</span>
+            <span id="pet-energy-text">70%</span>
+          </div>
+          <div class="pet-bar-outer">
+            <div id="pet-energy-bar" class="pet-bar-inner" style="background: var(--warning); width: 70%;"></div>
+          </div>
+        </div>
+
+        <!-- Action Grid -->
+        <button id="pet-action-interact" class="pet-action-btn">❤️ Pet Sweepy-chan</button>
+      </div>
+    </section>
+
+    <!-- Statistics Panel -->
+    <section class="stats-grid">
+      <div class="stat-card" style="border-bottom: 2px solid #38bdf8;">
+        <span id="stat-scanned" class="stat-val">0</span>
+        <span class="stat-lbl">Scanned</span>
+      </div>
+      <div class="stat-card" style="border-bottom: 2px solid var(--danger);">
+        <span id="stat-fakes" class="stat-val">0</span>
+        <span class="stat-lbl">Fakes Swept</span>
+      </div>
+      <div class="stat-card" style="border-bottom: 2px solid var(--success);">
+        <span id="stat-applied" class="stat-val">0</span>
+        <span class="stat-lbl">Applied</span>
+      </div>
+    </section>
+
+    <!-- Scanned Jobs Log Title -->
+    <div class="section-title">
+      <span>Scanned Opportunities</span>
+      <span id="scanned-jobs-count" class="section-title-badge">0</span>
+    </div>
+
+    <!-- Scanned Jobs List Container -->
+    <section id="jobs-log-container" class="jobs-log-list">
+      <!-- Dynamic list loaded from popup.js -->
+    </section>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "Jobagotchi",
+  "version": "2.0",
+  "description": "Identifies legitimate remote jobs and keeps you motivated with an interactive virtual pet!",
+
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+
+  "host_permissions": [
+    "https://www.linkedin.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ],
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Jobagotchi Dashboard",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/jobagotchi_sweeping.png",
+        "icons/jobagotchi_eating.png",
+        "icons/jobagotchi_sad.png"
+      ],
+      "matches": ["https://www.linkedin.com/*"]
+    }
+  ]
+}
