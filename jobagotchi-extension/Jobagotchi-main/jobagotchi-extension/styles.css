@@ -1,0 +1,12 @@
+.jobagotchi-badge {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999999;
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  font-family: Arial;
+  width: 250px;
+}
