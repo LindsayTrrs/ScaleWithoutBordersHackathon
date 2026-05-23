@@ -3,7 +3,8 @@
 function isJobPage() {
   return (
     window.location.pathname.startsWith('/jobs/view/') ||
-    window.location.pathname.startsWith('/jobs/collections/')
+    window.location.pathname.startsWith('/jobs/collections/') ||
+    window.location.pathname.startsWith('/jobs/search-results/')
   );
 }
 
