@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Jobagotchi",
+  "version": "2.0",
+  "description": "Scans LinkedIn job pages and rates remote-friendliness",
+
+  "permissions": [
+    "activeTab"
+  ],
+
+  "host_permissions": [
+    "https://www.linkedin.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ],
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Jobagotchi"
+  }
+}
