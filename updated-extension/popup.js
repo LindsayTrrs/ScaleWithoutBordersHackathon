@@ -49,9 +49,9 @@ function renderPetPanel() {
   // Update pet avatar asset depending on energy level
   const avatarImg = document.getElementById('pet-avatar-img');
   if (petState.energy < 35) {
-    avatarImg.src = "icons/jobagotchi_sad.png"; // Sad/exhausted
+    avatarImg.src = "icons/jobagotchi_sad.webp"; // Sad/exhausted
   } else {
-    avatarImg.src = "icons/jobagotchi_sweeping.png"; // Happy sweeping
+    avatarImg.src = "icons/jobagotchi_sweeping.webp"; // Happy sweeping
   }
 
   // Update XP Progress Bar
