@@ -204,9 +204,9 @@ function showBadge(job, analysis) {
   }
 
   // Create character sprites URLs
-  const sweepingImg = chrome.runtime.getURL('icons/jobagotchi_sweeping.png');
-  const eatingImg = chrome.runtime.getURL('icons/jobagotchi_eating.png');
-  const sadImg = chrome.runtime.getURL('icons/jobagotchi_sad.png');
+  const sweepingImg = chrome.runtime.getURL('icons/jobagotchi_sweeping.webp');
+  const eatingImg = chrome.runtime.getURL('icons/jobagotchi_eating.webp');
+  const sadImg = chrome.runtime.getURL('icons/jobagotchi_sad.webp');
 
   // Select initial sprite
   let activeSprite = sweepingImg;
