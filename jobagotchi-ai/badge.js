@@ -22,8 +22,7 @@
       }
 
       children.push(
-        Dom.el('ul', { class: 'jobagotchi-reasons' }, (analysis.reasons || []).slice(0, 4).map(reason => Dom.el('li', { text: reason }))),
-        Dom.el('div', { class: 'jobagotchi-skills' }, [Dom.el('strong', { text: `Resume match: ${analysis.skills?.matchScore || 0}%` }), Dom.el('p', { text: analysis.feedback || 'Paste your resume in the popup for personalized matching.' })])
+        Dom.el('ul', { class: 'jobagotchi-reasons' }, (analysis.reasons || []).slice(0, 4).map(reason => Dom.el('li', { text: reason })))
       );
 
       const badge = Dom.el('aside', { id: IDS.badge, class: `jobagotchi-badge ${ratingClass}`, role: 'complementary', 'aria-label': 'Jobagotchi job analysis' }, children);
