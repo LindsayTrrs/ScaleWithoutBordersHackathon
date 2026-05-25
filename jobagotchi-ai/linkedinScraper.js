@@ -105,11 +105,22 @@
   }
 
   function findLocation() {
-    return Dom.firstText([
-      '.job-details-jobs-unified-top-card__primary-description-container',
-      '.jobs-unified-top-card__primary-description',
-      '.jobs-unified-top-card__bullet',
-    ]) || '';
+  // 1. Grab the primary location text (e.g., "Windsor, ON")
+  const primaryDesc = Dom.firstText([
+    '.job-details-jobs-unified-top-card__primary-description-container',
+    '.jobs-unified-top-card__primary-description'
+  ]);
+  
+  // 2. Locate and grab all job insight pills (e.g., "On-site", "Full-time")
+  const insights = Array.from(document.querySelectorAll(
+    '.job-details-jobs-unified-top-card__job-insight, .jobs-unified-top-card__job-insight'
+  ))
+    .map(el => el.innerText?.trim())
+    .filter(Boolean)
+    .join(' · ');
+
+  // 3. Merge them into a single coherent string
+  return `${primaryDesc} · ${insights}`.trim();
   }
 
   window.Jobagotchi.LinkedInScraper = Scraper;
