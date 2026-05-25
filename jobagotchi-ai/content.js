@@ -43,19 +43,48 @@
     const jobId = J.LinkedInScraper.getCurrentJobId();
     if (!jobId) return;
 
+    J.Badge.loading('Scanning job posting...');
+
+    await J.LinkedInScraper.waitForDescription(jobId);
+
+    // Bail if user navigated away while waiting
+    if (location.href !== lastUrl && J.LinkedInScraper.getCurrentJobId() !== jobId) return;
+
+    const job = J.LinkedInScraper.scrape();
+    const cached = await J.Storage.get(`job_${job.id}`);
+
+    if (cached?.analysis) {
+      J.Badge.render(job, cached.analysis);
+      return;
+    }
+
+    // Deduplicate — don't re-render same job
+    const signature = `${job.id}:${J.Text.hash(job.title + job.company + job.description.slice(0, 500))}`;
+    if (signature === lastSignature) return;
+    lastSignature = signature;
+
+    if (!job.description) job.description = 'Description could not be loaded.';
+
     J.Badge.loading('Analyzing legitimacy, scam risk, and resume match...');
 
     const resume = await J.Storage.get(J.Config.STORAGE_KEYS.RESUME);
-    
-    // Pass the fetched resume to the local analyzer
-    let analysis = J.RuleAnalyzer.analyze(job, resume); 
+    let analysis = J.RuleAnalyzer.analyze(job);
 
     try {
-      // Ensure AI is always called to perform advanced remote/scam checks
-      const ai = await J.WorkerClient.analyze(job, resume); // Pass the resume here too
-      analysis = mergeAnalysis(analysis, ai);
+      if (
+          analysis.score < 55 ||
+          analysis.rating === 'SUSPICIOUS' ||
+          analysis.reasons.length <= 1
+          ) {
+                try {
+                  const ai = await J.WorkerClient.analyze(job);
+                  analysis = mergeAnalysis(analysis, ai);
+                } catch (err) {
+                  
+                }
+            }
     } catch (err) {
-      analysis.reasons.unshift(`ℹ️ Local scan only: ${err.message}`);
+      
     }
 
     await J.Storage.recordScan(job, analysis);
@@ -63,13 +92,11 @@
   }
 
   function mergeAnalysis(local, ai) {
-    // Correctly calculate the 35% local / 65% AI weighted score
-    const finalScore = Math.round((local.score * 0.35) + (ai.score * 0.65));
     return {
       ...local,
       ...ai,
-      score:   finalScore,
-      rating:  finalRating(finalScore),
+      score: local.score,
+      rating: finalRating(local.score),
       reasons: [...(ai.reasons || []), ...(local.reasons || [])].slice(0, 6),
       source:  'hybrid'
     };
