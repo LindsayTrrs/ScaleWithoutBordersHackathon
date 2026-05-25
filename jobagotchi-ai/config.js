@@ -2,7 +2,7 @@
   'use strict';
   window.Jobagotchi = window.Jobagotchi || {};
   window.Jobagotchi.Config = Object.freeze({
-    WORKER_URL: 'https://jobagotchi-worker.jobagotchi.workers.dev',
+    WORKER_URL: 'https://jobagotchi-worker.jobagotchi-123.workers.dev',
     AI_TIMEOUT_MS: 25000,
     SCRAPE_DEBOUNCE_MS: 450,
     MAX_DESCRIPTION_CHARS: 12000,

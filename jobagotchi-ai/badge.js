@@ -4,7 +4,22 @@
   const IDS = { badge: 'jobagotchi-floating-widget', mini: 'jobagotchi-mini-badge' };
   const UI = {
     remove() { document.getElementById(IDS.badge)?.remove(); document.getElementById(IDS.mini)?.remove(); },
-    loading(message = 'Scanning this job...') { UI.remove(); document.body.append(Dom.el('aside', { id: IDS.badge, class: 'jobagotchi-badge jobagotchi-loading', role: 'status', 'aria-live': 'polite' }, [avatar('sweeping'), Dom.el('div', { class: 'jobagotchi-content' }, [Dom.el('strong', { text: 'Jobagotchi' }), Dom.el('p', { text: message })])])); },
+    loading(message = 'Scanning this job...') { 
+  UI.remove(); 
+  document.body.append(
+    Dom.el('aside', { 
+      id: IDS.badge, 
+      class: 'jobagotchi-badge jobagotchi-loading', 
+      role: 'status', 
+      'aria-live': 'polite' 
+    }, [
+      avatar('sweeping'),
+      Dom.el('div', { class: 'jobagotchi-content' }, [
+        Dom.el('p', { text: message })
+      ])
+    ])
+  ); 
+},
     render(job, analysis) {
       UI.remove();
       const ratingClass = analysis.rating.toLowerCase();

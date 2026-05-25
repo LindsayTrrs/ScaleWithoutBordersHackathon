@@ -1,4 +1,5 @@
 name = "jobagotchi-worker"
+account_id = "5c6d4282346bd25a564a4cf396c7a9e6"
 main = "index.js"
 compatibility_date = "2026-05-24"
 

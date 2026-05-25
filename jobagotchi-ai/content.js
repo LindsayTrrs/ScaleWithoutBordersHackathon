@@ -29,7 +29,7 @@
         lastSignature = '';
         run();
       }
-    }, 500);
+    }, 5000);
 
     window.addEventListener('pagehide', () => J.Badge.remove(), { once: true });
   }
@@ -51,6 +51,12 @@
     if (location.href !== lastUrl && J.LinkedInScraper.getCurrentJobId() !== jobId) return;
 
     const job = J.LinkedInScraper.scrape();
+    const cached = await J.Storage.get(`job_${job.id}`);
+
+    if (cached?.analysis) {
+      J.Badge.render(job, cached.analysis);
+      return;
+    }
 
     // Deduplicate — don't re-render same job
     const signature = `${job.id}:${J.Text.hash(job.title + job.company + job.description.slice(0, 500))}`;
@@ -62,13 +68,23 @@
     J.Badge.loading('Analyzing legitimacy, scam risk, and resume match...');
 
     const resume = await J.Storage.get(J.Config.STORAGE_KEYS.RESUME);
-    let analysis = J.RuleAnalyzer.analyze(job, resume);
+    let analysis = J.RuleAnalyzer.analyze(job);
 
     try {
-      const ai = await J.WorkerClient.analyze(job, resume);
-      analysis = mergeAnalysis(analysis, ai);
+      if (
+          analysis.score < 55 ||
+          analysis.rating === 'SUSPICIOUS' ||
+          analysis.reasons.length <= 1
+          ) {
+                try {
+                  const ai = await J.WorkerClient.analyze(job);
+                  analysis = mergeAnalysis(analysis, ai);
+                } catch (err) {
+                  
+                }
+            }
     } catch (err) {
-      analysis.reasons.unshift(`ℹ️ Local scan only: ${err.message}`);
+      
     }
 
     await J.Storage.recordScan(job, analysis);
@@ -79,8 +95,8 @@
     return {
       ...local,
       ...ai,
-      score:   Math.round((local.score * 0.35) + (ai.score * 0.65)),
-      rating:  finalRating(Math.round((local.score * 0.35) + (ai.score * 0.65))),
+      score: local.score,
+      rating: finalRating(local.score),
       reasons: [...(ai.reasons || []), ...(local.reasons || [])].slice(0, 6),
       source:  'hybrid'
     };
