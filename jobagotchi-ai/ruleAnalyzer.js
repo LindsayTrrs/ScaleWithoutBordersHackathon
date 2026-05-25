@@ -27,7 +27,6 @@
   const RuleAnalyzer = {
     analyze(job, resumeText = '') {
       const text = Text.clean(`${job.title} ${job.company} ${job.description} ${job.location || ''}`, 25000).toLowerCase();
-      const reasons = [];
       let score = 62;
       if (
         !job.company ||
@@ -37,7 +36,7 @@
         score -= 20;
         reasons.push('Company identity is vague or missing.');
         }
-  
+      const reasons = [];
       CHECKS.forEach(c => { if (c.words.some(w => text.includes(w))) { score += c.delta; reasons.push(c.reason); } });
       if ((job.description || '').length < 300) { score -= 30; reasons.push('Job description is unusually short.'); }
       const matchedSkills = skills.filter(s => text.includes(s));
