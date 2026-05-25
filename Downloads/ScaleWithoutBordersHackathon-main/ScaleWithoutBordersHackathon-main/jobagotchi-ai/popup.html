@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Jobagotchi</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <main class="app">
+
+    <section class="hero">
+      <img src="icons/jobagotchi_sweeping.png" alt="" class="pet">
+
+      <div>
+        <h1 id="petName">Jobagotchi</h1>
+        <p id="petLevel">Loading...</p>
+      </div>
+    </section>
+
+    <section class="grid" id="stats"></section>
+
+    <section class="card">
+      <h2>Recent scans</h2>
+
+      <div id="log" class="log empty">
+        No scans yet. Open a LinkedIn job page.
+      </div>
+    </section>
+
+  </main>
+
+  <script src="constants/config.js"></script>
+  <script src="utils/text.js"></script>
+  <script src="storage/storage.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

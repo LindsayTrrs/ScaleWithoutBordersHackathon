@@ -1,0 +1,8 @@
+name = "jobagotchi-worker"
+main = "index.js"
+compatibility_date = "2026-05-24"
+
+# Optional KV namespace for per-IP minute rate limiting.
+# [[kv_namespaces]]
+# binding = "RATE_LIMIT_KV"
+# id = "YOUR_KV_NAMESPACE_ID"

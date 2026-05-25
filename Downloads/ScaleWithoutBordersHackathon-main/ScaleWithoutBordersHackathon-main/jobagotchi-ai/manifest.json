@@ -1,0 +1,60 @@
+{
+  "manifest_version": 3,
+  "name": "Jobagotchi",
+  "version": "3.0.1",
+  "description": "AI-powered LinkedIn job legitimacy, scam detection, and resume match assistant.",
+  "permissions": ["storage", "scripting", "tabs", "webNavigation"],
+  "host_permissions": [
+    "https://www.linkedin.com/*",
+    "https://*.workers.dev/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.linkedin.com/jobs/view/*",
+        "https://www.linkedin.com/jobs/collections/*",
+        "https://www.linkedin.com/jobs/search-results/*"
+      ],
+      "js": [
+        "config.js",
+        "text.js",
+        "dom.js",
+        "storage.js",
+        "ruleAnalyzer.js",
+        "linkedinScraper.js",
+        "workerClient.js",
+        "badge.js",
+        "content.js"
+      ],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Jobagotchi Dashboard",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/jobagotchi_sweeping.png",
+        "icons/jobagotchi_eating.png",
+        "icons/jobagotchi_sad.png"
+      ],
+      "matches": ["https://www.linkedin.com/*"]
+    }
+  ]
+}
